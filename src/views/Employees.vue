@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container>
     <v-row>
       <v-col cols="8" offset="2">
         <v-card color="indigo lighten-3" class="pa-2">
@@ -9,10 +9,10 @@
               color="primary"
             ></v-progress-circular>
           </div>
-          <div v-else>
+          <div v-else class="pa-1">
             <v-row align="center">
-              <v-col cols="8">
-                <v-card color="indigo darken-1" class="pa-1 white--text font-weight-bold">
+              <v-col cols="10">
+                <v-card color="indigo darken-1" class="white--text font-weight-bold pa-1">
                   <v-row>
                     <v-col cols="3" style="text-align: center">First Name</v-col>
                     <v-col cols="3" style="text-align: center">Last Name</v-col>
@@ -20,54 +20,54 @@
                   </v-row>
                 </v-card>
               </v-col>
-              <v-col cols="3" offset="1">
+              <v-col cols="2">
                 <v-btn color="green" class="white--text">Add user</v-btn>
               </v-col>
             </v-row>
-            <v-row v-for="user in users" :key="user.id" align="center">
-              <v-col cols="8">
-                <v-card>
+            <v-row align="center">
+              <v-col cols="12">
+                <div v-for="user in users" :key="user.id">
                   <v-row>
-                    <v-col cols="3" style="text-align: center">{{user.firstName}}</v-col>
-                    <v-col cols="3" style="text-align: center">{{user.lastName}}</v-col>
-                    <v-col cols="6" style="text-align: center">{{user.email}}</v-col>
+                    <v-col cols="10">
+                      <v-card>
+                        <v-row>
+                          <v-col cols="3" style="text-align: center">{{user.firstName}}</v-col>
+                          <v-col cols="3" style="text-align: center">{{user.lastName}}</v-col>
+                          <v-col cols="6" style="text-align: center">{{user.email}}</v-col>
+                        </v-row>
+                      </v-card>
+                    </v-col>
+                    <v-col cols="1">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <v-btn fab small color="indigo lighten-1" v-on="on" @click="showUserDetails(user.id), detailsDialogVisibility = true">
+                            <v-icon style="color: white">mdi-account-card-details</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Karta użytkownika</span>
+                      </v-tooltip>
+                    </v-col>
+                    <v-col cols="1">
+                      <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                          <v-btn fab small color="red" v-on="on">
+                            <v-icon style="color: white">mdi-delete</v-icon>
+                          </v-btn>
+                        </template>
+                        <span>Usuń użytkownika</span>
+                      </v-tooltip>
+                    </v-col>
                   </v-row>
-                </v-card>
+                </div>
               </v-col>
-              <v-col cols="4">
-                <v-row>
-                  <v-col cols="4" style="text-align: center">
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
-                        <v-btn fab small color="indigo lighten-1" v-on="on" @click="showUserDetails(user.id), detailsDialogVisibility = true">
-                          <v-icon style="color: white">mdi-account-card-details</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Karta użytkownika</span>
-                    </v-tooltip>
-                  </v-col>
-                  <v-col cols="4" style="text-align: center">
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
-                        <v-btn fab small color="indigo lighten-1" v-on="on">
-                          <v-icon style="color: white">mdi-account-edit</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Edytuj dane użytkownika</span>
-                    </v-tooltip>
-                  </v-col>
-                  <v-col cols="4" style="text-align: center">
-                    <v-tooltip bottom>
-                      <template v-slot:activator="{ on }">
-                        <v-btn fab small color="red" v-on="on">
-                          <v-icon style="color: white">mdi-delete</v-icon>
-                        </v-btn>
-                      </template>
-                      <span>Usuń użytkownika</span>
-                    </v-tooltip>
-                  </v-col>
-                </v-row>
-              </v-col>
+<!--              <v-col cols="2">-->
+<!--                <v-row>-->
+<!--                  <v-col cols="6" style="text-align: center">-->
+<!--                  </v-col>-->
+<!--                  <v-col cols="6" style="text-align: center">-->
+<!--                  </v-col>-->
+<!--                </v-row>-->
+<!--              </v-col>-->
             </v-row>
           </div>
         </v-card>
@@ -78,19 +78,24 @@
       v-on:updateDetailsDialogVisibility="updateDetailsDialogVisibility"
       :userDetails="userDetails"
     />
+    <AddEmployeeDialog
+      :addEmployeeDialogVisibility="addEmployeeDialogVisibility"
+    />
   </v-container>
 </template>
 
 <script>
 import db from '../libs/firebaseInit'
 import DetailsDialog from '../components/ui/DetailsDialog'
+import AddEmployeeDialog from '../components/ui/AddEmployeeDialog'
 export default {
   name: 'Employees',
-  components: { DetailsDialog },
+  components: { AddEmployeeDialog, DetailsDialog },
   data: () => ({
     users: [],
     userDetails: {},
-    detailsDialogVisibility: false
+    detailsDialogVisibility: false,
+    addEmployeeDialogVisibility: false
   }),
   methods: {
     updateDetailsDialogVisibility (value) {
@@ -110,6 +115,9 @@ export default {
             }
           })
         })
+    },
+    addUser () {
+
     }
   },
   created () {
@@ -134,3 +142,8 @@ export default {
   }
 }
 </script>
+<style>
+  .fill-height {
+    height: 40%;
+  }
+</style>
