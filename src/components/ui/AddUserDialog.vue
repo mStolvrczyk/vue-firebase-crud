@@ -76,6 +76,7 @@ export default {
   methods: {
     saveUser () {
       db.firestore().collection('users').add({
+        id: '',
         first_name: this.firstName,
         last_name: this.lastName,
         email: this.email,

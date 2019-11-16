@@ -3,13 +3,13 @@
     <v-row>
       <v-col cols="8" offset="2">
         <v-card color="indigo lighten-3" class="pa-2">
-          <div v-if="users.length === 0" align="center">
-            <v-progress-circular
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
-          </div>
-          <div v-else class="pa-1">
+<!--          <div v-if="users.length === 0" align="center">-->
+<!--            <v-progress-circular-->
+<!--              indeterminate-->
+<!--              color="primary"-->
+<!--            ></v-progress-circular>-->
+<!--          </div>-->
+          <div class="pa-1">
             <v-row align="center">
               <v-col cols="10">
                 <v-card color="indigo darken-1" class="white--text font-weight-bold pa-1">
@@ -123,8 +123,11 @@ export default {
       this.getUsers()
     },
     async getUsers () {
-      let userRef = db.firestore().ref('/project/vue-firebase-crud-7846d/database/firestore/data~2Fusers')
-      console.log(userRef)
+      const snapshot = await db.firestore().collection('users').get()
+      let idArray = snapshot.docs.map(doc => doc.id)
+      console.log(idArray)
+      let docArray = snapshot.docs.map(doc => doc.data())
+      console.log(docArray)
     },
     deleteUser (id) {
       db.firestore().collection('users').get()
