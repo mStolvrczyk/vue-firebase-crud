@@ -12,7 +12,7 @@
           mdi-home
         </v-icon>
       </router-link>
-      <router-link to="/employees" class="v-btn icon pa-3">
+      <router-link to="/users" class="v-btn icon pa-3">
         <v-icon style="font-size: 30px">
           mdi-account-group
         </v-icon>

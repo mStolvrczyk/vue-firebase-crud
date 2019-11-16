@@ -16,7 +16,7 @@ export default {
     return {
       details: []
     }
-  },
+  }
   // mounted () {
   //   db.firestore().collection('users').get()
   //     .then(querySnapshot => {
@@ -25,10 +25,5 @@ export default {
   //       })
   //     })
   // },
-  watch: {
-    'details' (value) {
-      console.log(value)
-    }
-  }
 }
 </script>

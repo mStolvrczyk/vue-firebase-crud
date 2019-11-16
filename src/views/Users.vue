@@ -21,7 +21,7 @@
                 </v-card>
               </v-col>
               <v-col cols="2">
-                <v-btn color="green" class="white--text">Add user</v-btn>
+                <v-btn @click="addUserDialogVisibility = true" color="green" class="white--text">Add user</v-btn>
               </v-col>
             </v-row>
             <v-row align="center">
@@ -50,7 +50,7 @@
                     <v-col cols="1">
                       <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                          <v-btn fab small color="red" v-on="on">
+                          <v-btn @click="deleteUser(user.id)" fab small color="red" v-on="on">
                             <v-icon style="color: white">mdi-delete</v-icon>
                           </v-btn>
                         </template>
@@ -78,8 +78,9 @@
       v-on:updateDetailsDialogVisibility="updateDetailsDialogVisibility"
       :userDetails="userDetails"
     />
-    <AddEmployeeDialog
-      :addEmployeeDialogVisibility="addEmployeeDialogVisibility"
+    <AddUserDialog
+      :addUserDialogVisibility.sync="addUserDialogVisibility"
+      v-on:updateAddUserDialogVisibility="updateAddUserDialogVisibility"
     />
   </v-container>
 </template>
@@ -87,56 +88,66 @@
 <script>
 import db from '../libs/firebaseInit'
 import DetailsDialog from '../components/ui/DetailsDialog'
-import AddEmployeeDialog from '../components/ui/AddEmployeeDialog'
+import AddUserDialog from '../components/ui/AddUserDialog'
 export default {
   name: 'Employees',
-  components: { AddEmployeeDialog, DetailsDialog },
+  components: { AddUserDialog, DetailsDialog },
   data: () => ({
     users: [],
     userDetails: {},
     detailsDialogVisibility: false,
-    addEmployeeDialogVisibility: false
+    addUserDialogVisibility: false,
+    circular: false
   }),
   methods: {
     updateDetailsDialogVisibility (value) {
       this.detailsDialogVisibility = value
     },
     showUserDetails (id) {
-      db.firestore().collection('users').where('user_id', '==', id).get()
+      this.users.forEach(user => {
+        if (user.id === id) {
+          this.userDetails = {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phoneNumber: user.phoneNumber,
+            email: user.email,
+            address: user.address
+          }
+        }
+      })
+    },
+    updateAddUserDialogVisibility (value) {
+      this.users = []
+      this.addUserDialogVisibility = value
+      this.getUsers()
+    },
+    async getUsers () {
+      let userRef = db.firestore().ref('/project/vue-firebase-crud-7846d/database/firestore/data~2Fusers')
+      console.log(userRef)
+    },
+    deleteUser (id) {
+      db.firestore().collection('users').get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
-            this.userDetails = {
-              id: doc.data().user_id,
-              firstName: doc.data().first_name,
-              lastName: doc.data().last_name,
-              phoneNumber: doc.data().phone_number,
-              email: doc.data().email,
-              address: doc.data().address
+            if (doc.id === id) {
+              doc.ref.delete()
             }
           })
         })
-    },
-    addUser () {
-
+      this.getUsers()
     }
   },
   created () {
-    db.firestore().collection('users').get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          const data = {
-            'id': doc.data().user_id,
-            'firstName': doc.data().first_name,
-            'lastName': doc.data().last_name,
-            'phoneNumber': doc.data().phone_number,
-            'email': doc.data().email
-          }
-          this.users.push(data)
-        })
-      })
+    this.getUsers()
   },
   watch: {
-    'userDetails' (value) {
+    'addEmployeeDialogVisibility' (value) {
+      if (value === false) {
+        this.getUsers()
+      }
+    },
+    'users' (value) {
       console.log(value)
     }
   }
