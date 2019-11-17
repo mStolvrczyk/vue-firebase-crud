@@ -4,13 +4,13 @@
 
     <v-row align="center">
       <v-col cols="8" offset="2" align="center">
-        <v-card class="pa-2" color="indigo lighten-2">
+        <v-card class="pa-2" color="blue-grey lighten-4">
           <v-row>
             <v-col cols="10" offset="1">
               <v-text-field
                 label="First Name"
                 v-model="firstName"
-                :error-messages="nameErrors"
+                :error-messages="firstNameErrors"
                 @input="$v.firstName.$touch()"
                 @blur="$v.firstName.$touch()"
                 required
@@ -20,65 +20,74 @@
           <v-row>
             <v-col cols="10" offset="1">
               <v-text-field
-                v-model="lastName"
                 label="Last Name"
+                v-model="lastName"
+                :error-messages="lastNameErrors"
+                @input="$v.lastName.$touch()"
+                @blur="$v.lastName.$touch()"
+                required
               ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="10" offset="1">
               <v-text-field
-                v-model="email"
                 label="Email"
+                v-model="email"
+                :error-messages="emailErrors"
+                @input="$v.email.$touch()"
+                @blur="$v.email.$touch()"
+                required
               ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="10" offset="1">
               <v-text-field
-                v-model="phoneNumber"
                 label="Phone Number"
+                v-model="phoneNumber"
+                :error-messages="phoneNumberErrors"
+                @input="$v.phoneNumber.$touch()"
+                @blur="$v.phoneNumber.$touch()"
+                required
               ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="10" offset="1">
               <v-text-field
-                v-model="address"
                 label="Address"
+                v-model="address"
+                :error-messages="addressErrors"
+                @input="$v.address.$touch()"
+                @blur="$v.address.$touch()"
+                required
               ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col>
-              <v-btn @click="saveUser" color="green" class="white--text">Add user</v-btn>
+              <v-btn @click="saveUser" color="indigo darken-4" class="white--text">Add user</v-btn>
             </v-col>
           </v-row>
         </v-card>
       </v-col>
     </v-row>
   </v-container>
-  <AlertDialog
-  :alertVisibility.sync:="alertVisibility"
-  v-on:closeAlertDialog="closeAlertDialog"
-  />
 </v-dialog>
 </template>
 
 <script>
 import db from '../../libs/firebaseInit'
 import { required, minLength } from 'vuelidate/lib/validators'
-import AlertDialog from './AlertDialog'
 export default {
   name: 'AddUserDialog',
-  components: { AlertDialog },
   data: () => ({
     firstName: '',
     lastName: '',
     email: '',
     phoneNumber: '',
-    address: '',
-    alertVisibility: false
+    address: ''
   }),
   validations: {
     firstName: {
@@ -103,36 +112,58 @@ export default {
   },
   methods: {
     async saveUser () {
-      this.alertVisibility = true
-      await db.firestore().collection('users').add({
-        first_name: this.firstName,
-        last_name: this.lastName,
-        email: this.email,
-        phone_number: this.phoneNumber,
-        address: this.address
-      })
-      this.firstName = null
-      this.lastName = null
-      this.email = null
-      this.phoneNumber = null
-      this.address = null
-      this.$emit('updateAddUserDialogVisibility', false)
-    },
-    closeAlertDialog (value) {
-      this.alertVisibility = value
+      if (this.$v.$dirty) {
+        await db.firestore().collection('users').add({
+          first_name: this.firstName,
+          last_name: this.lastName,
+          email: this.email,
+          phone_number: this.phoneNumber,
+          address: this.address
+        })
+        this.firstName = ''
+        this.lastName = ''
+        this.email = ''
+        this.phoneNumber = ''
+        this.address = ''
+        this.$emit('updateAddUserDialogVisibility', false)
+      }
     }
   },
   computed: {
-    nameErrors () {
+    firstNameErrors () {
       const errors = []
       if (!this.$v.firstName.$dirty) return errors
       !this.$v.firstName.required && errors.push('First name is required.')
+      return errors
+    },
+    lastNameErrors () {
+      const errors = []
+      if (!this.$v.lastName.$dirty) return errors
+      !this.$v.lastName.required && errors.push('Last name is required.')
+      return errors
+    },
+    emailErrors () {
+      const errors = []
+      if (!this.$v.email.$dirty) return errors
+      !this.$v.email.required && errors.push('Email is required.')
+      return errors
+    },
+    phoneNumberErrors () {
+      const errors = []
+      if (!this.$v.phoneNumber.$dirty) return errors
+      !this.$v.phoneNumber.required && errors.push('Phone number is required.')
+      !this.$v.phoneNumber.minLength && errors.push('Phone number must have at least 9 characters')
+      return errors
+    },
+    addressErrors () {
+      const errors = []
+      if (!this.$v.address.$dirty) return errors
+      !this.$v.address.required && errors.push('Address is required.')
       return errors
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style>
 </style>
