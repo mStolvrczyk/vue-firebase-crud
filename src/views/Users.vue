@@ -108,7 +108,7 @@ export default {
     userDetails: {},
     detailsDialogVisibility: false,
     addUserDialogVisibility: false,
-    circularVisibility: true
+    circularVisibility: false
   }),
   methods: {
     updateDetailsDialogVisibility (value) {
@@ -119,9 +119,9 @@ export default {
         if (user.id === id) {
           this.userDetails = {
             id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            phoneNumber: user.phoneNumber,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            phoneNumber: user.phone_number,
             email: user.email,
             address: user.address
           }
@@ -129,11 +129,14 @@ export default {
       })
     },
     updateAddUserDialogVisibility (value) {
-      this.users = []
       this.addUserDialogVisibility = value
       this.getUsers()
     },
     async getUsers () {
+      this.circularVisibility = true
+      setTimeout(function () { this.circularVisibility = false }
+        .bind(this),
+      6000)
       this.users = await db.firestore().collection('users').get().then(({ docs }) => {
         return docs.map((doc) => {
           return {
@@ -164,11 +167,6 @@ export default {
         this.getUsers()
       }
     }
-  },
-  mounted () {
-    setTimeout(function () { this.circularVisibility = false }
-      .bind(this),
-    6000)
   }
 }
 </script>

@@ -1,12 +1,19 @@
 <template>
-  <v-dialog v-model="detailsDialogVisibility">
-    <v-container>
-      <v-row>
-        <v-col cols="10" offset="1">
-          <v-card height="700px" color="indigo lighten-2" class="pa-5">
+      <v-row justify="center">
+  <v-dialog v-model="detailsDialogVisibility" fullscreen hide-overlay transition="dialog-bottom-transition">
+<!--    <v-container>-->
+<!--        <v-col cols="10" offset="1">-->
+          <v-card color="white" class="pa-5">
             <v-row>
               <v-col cols="3">
-                <v-card color="indigo lighten-1" width="300px">
+                <v-card color="indigo lighten-3" width="300px">
+                  <v-row>
+                    <v-col cols="12">
+                      <v-card>
+                        USER DETAILS
+                      </v-card>
+                    </v-col>
+                  </v-row>
                   <v-card-text class="white--text font-weight-bold">First Name: {{userDetails.firstName}}</v-card-text>
                   <v-card-text class="white--text font-weight-bold">Last Name: {{userDetails.lastName}}</v-card-text>
                   <v-card-text class="white--text font-weight-bold">Email: {{userDetails.email}}</v-card-text>
@@ -19,10 +26,10 @@
 <!--            <v-btn @click="closeDialog">-->
 <!--            </v-btn>-->
           </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+<!--        </v-col>-->
+<!--    </v-container>-->
   </v-dialog>
+      </v-row>
 </template>
 
 <script>

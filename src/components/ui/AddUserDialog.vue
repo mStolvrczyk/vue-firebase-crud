@@ -1,80 +1,85 @@
 <template>
-<v-dialog v-model="addUserDialogVisibility">
-  <v-container>
+  <v-row justify="center">
+    <v-dialog v-model="addUserDialogVisibility" max-width="600px">
+    <!--  <v-container>-->
 
-    <v-row align="center">
-      <v-col cols="8" offset="2" align="center">
-        <v-card class="pa-2" color="blue-grey lighten-4">
-          <v-row>
-            <v-col cols="10" offset="1">
-              <v-text-field
-                label="First Name"
-                v-model="firstName"
-                :error-messages="firstNameErrors"
-                @input="$v.firstName.$touch()"
-                @blur="$v.firstName.$touch()"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="10" offset="1">
-              <v-text-field
-                label="Last Name"
-                v-model="lastName"
-                :error-messages="lastNameErrors"
-                @input="$v.lastName.$touch()"
-                @blur="$v.lastName.$touch()"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="10" offset="1">
-              <v-text-field
-                label="Email"
-                v-model="email"
-                :error-messages="emailErrors"
-                @input="$v.email.$touch()"
-                @blur="$v.email.$touch()"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="10" offset="1">
-              <v-text-field
-                label="Phone Number"
-                v-model="phoneNumber"
-                :error-messages="phoneNumberErrors"
-                @input="$v.phoneNumber.$touch()"
-                @blur="$v.phoneNumber.$touch()"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="10" offset="1">
-              <v-text-field
-                label="Address"
-                v-model="address"
-                :error-messages="addressErrors"
-                @input="$v.address.$touch()"
-                @blur="$v.address.$touch()"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-btn @click="saveUser" color="indigo darken-4" class="white--text">Add user</v-btn>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
-</v-dialog>
+    <!--    <v-row align="center">-->
+    <!--      <v-col cols="8" offset="2" align="center">-->
+            <v-card class="pa-8" color="blue-grey lighten-4">
+<!--              <v-row>-->
+<!--                <v-col cols="10" offset="1">-->
+                  <v-text-field
+                    label="First Name"
+                    v-model="firstName"
+                    :error-messages="firstNameErrors"
+                    @input="$v.firstName.$touch()"
+                    @blur="$v.firstName.$touch()"
+                    required
+                  ></v-text-field>
+<!--                </v-col>-->
+<!--              </v-row>-->
+<!--              <v-row>-->
+<!--                <v-col cols="10" offset="1">-->
+                  <v-text-field
+                    label="Last Name"
+                    v-model="lastName"
+                    :error-messages="lastNameErrors"
+                    @input="$v.lastName.$touch()"
+                    @blur="$v.lastName.$touch()"
+                    required
+                  ></v-text-field>
+<!--                </v-col>-->
+<!--              </v-row>-->
+<!--              <v-row>-->
+<!--                <v-col cols="10" offset="1">-->
+                  <v-text-field
+                    label="Email"
+                    v-model="email"
+                    :error-messages="emailErrors"
+                    @input="$v.email.$touch()"
+                    @blur="$v.email.$touch()"
+                    required
+                  ></v-text-field>
+<!--                </v-col>-->
+<!--              </v-row>-->
+<!--              <v-row>-->
+<!--                <v-col cols="10" offset="1">-->
+                  <v-text-field
+                    label="Phone Number"
+                    v-model="phoneNumber"
+                    :error-messages="phoneNumberErrors"
+                    @input="$v.phoneNumber.$touch()"
+                    @blur="$v.phoneNumber.$touch()"
+                    required
+                  ></v-text-field>
+<!--                </v-col>-->
+<!--              </v-row>-->
+<!--              <v-row>-->
+<!--                <v-col cols="10" offset="1">-->
+                  <v-text-field
+                    label="Address"
+                    v-model="address"
+                    :error-messages="addressErrors"
+                    @input="$v.address.$touch()"
+                    @blur="$v.address.$touch()"
+                    required
+                  ></v-text-field>
+<!--                </v-col>-->
+<!--              </v-row>-->
+              <v-row align="center">
+                <v-col cols="6" offset="3">
+                  <v-btn @click="saveUser" color="indigo darken-4" class="white--text mx-2">Add user</v-btn>
+                  <v-btn @click="cancelAdding" color="blue-grey" class="white--text mx-2">Cancel</v-btn>
+                </v-col>
+                <v-col>
+                </v-col>
+              </v-row>
+            </v-card>
+    <!--      </v-col>-->
+    <!--    </v-row>-->
+    <!--  </v-container>-->
+    </v-dialog>
+  </v-row>
 </template>
 
 <script>
@@ -112,21 +117,22 @@ export default {
   },
   methods: {
     async saveUser () {
-      if (this.$v.$dirty) {
-        await db.firestore().collection('users').add({
-          first_name: this.firstName,
-          last_name: this.lastName,
-          email: this.email,
-          phone_number: this.phoneNumber,
-          address: this.address
-        })
-        this.firstName = ''
-        this.lastName = ''
-        this.email = ''
-        this.phoneNumber = ''
-        this.address = ''
-        this.$emit('updateAddUserDialogVisibility', false)
-      }
+      // this.$v.$touch()
+      // if (!this.$v.$dirty) {
+      await db.firestore().collection('users').add({
+        first_name: this.firstName,
+        last_name: this.lastName,
+        email: this.email,
+        phone_number: this.phoneNumber,
+        address: this.address
+      })
+      this.$emit('updateAddUserDialogVisibility', false)
+      // } else {
+      //   this.$v.$reset()
+      // }
+    },
+    cancelAdding () {
+      this.$emit('updateAddUserDialogVisibility', false)
     }
   },
   computed: {
@@ -160,6 +166,18 @@ export default {
       if (!this.$v.address.$dirty) return errors
       !this.$v.address.required && errors.push('Address is required.')
       return errors
+    }
+  },
+  watch: {
+    'addUserDialogVisibility' (value) {
+      if (value === false) {
+        this.$v.$reset()
+        this.firstName = ''
+        this.lastName = ''
+        this.email = ''
+        this.phoneNumber = ''
+        this.address = ''
+      }
     }
   }
 }
