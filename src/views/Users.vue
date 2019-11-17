@@ -3,13 +3,24 @@
     <v-row>
       <v-col cols="8" offset="2">
         <v-card color="indigo lighten-3" class="pa-2">
-<!--          <div v-if="users.length === 0" align="center">-->
-<!--            <v-progress-circular-->
-<!--              indeterminate-->
-<!--              color="primary"-->
-<!--            ></v-progress-circular>-->
-<!--          </div>-->
-          <div class="pa-1">
+          <div v-if="users.length === 0 && circularVisibility === true" align="center">
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
+          </div>
+          <div align="center" v-else-if="users.length === 0">
+            <v-card-text class="white--text" style="font-weight: bold; font-size: 25px; font-style: oblique">Database is empty or an
+              error with
+              connection has
+              occured</v-card-text>
+            <v-row>
+              <v-col>
+                  <v-btn @click="addUserDialogVisibility = true" color="green" class="white--text">Add user</v-btn>
+              </v-col>
+            </v-row>
+          </div>
+          <div class="pa-1" v-if="users.length > 0">
             <v-row align="center">
               <v-col cols="10">
                 <v-card color="indigo darken-1" class="white--text font-weight-bold pa-1">
@@ -31,8 +42,8 @@
                     <v-col cols="10">
                       <v-card>
                         <v-row>
-                          <v-col cols="3" style="text-align: center">{{user.firstName}}</v-col>
-                          <v-col cols="3" style="text-align: center">{{user.lastName}}</v-col>
+                          <v-col cols="3" style="text-align: center">{{user.first_name}}</v-col>
+                          <v-col cols="3" style="text-align: center">{{user.last_name}}</v-col>
                           <v-col cols="6" style="text-align: center">{{user.email}}</v-col>
                         </v-row>
                       </v-card>
@@ -97,7 +108,7 @@ export default {
     userDetails: {},
     detailsDialogVisibility: false,
     addUserDialogVisibility: false,
-    circular: false
+    circularVisibility: true
   }),
   methods: {
     updateDetailsDialogVisibility (value) {
@@ -123,14 +134,17 @@ export default {
       this.getUsers()
     },
     async getUsers () {
-      const snapshot = await db.firestore().collection('users').get()
-      let idArray = snapshot.docs.map(doc => doc.id)
-      console.log(idArray)
-      let docArray = snapshot.docs.map(doc => doc.data())
-      console.log(docArray)
+      this.users = await db.firestore().collection('users').get().then(({ docs }) => {
+        return docs.map((doc) => {
+          return {
+            ...doc.data(),
+            id: doc.id
+          }
+        })
+      })
     },
-    deleteUser (id) {
-      db.firestore().collection('users').get()
+    async deleteUser (id) {
+      await db.firestore().collection('users').get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
             if (doc.id === id) {
@@ -149,10 +163,12 @@ export default {
       if (value === false) {
         this.getUsers()
       }
-    },
-    'users' (value) {
-      console.log(value)
     }
+  },
+  mounted () {
+    setTimeout(function () { this.circularVisibility = false }
+      .bind(this),
+    6000)
   }
 }
 </script>
