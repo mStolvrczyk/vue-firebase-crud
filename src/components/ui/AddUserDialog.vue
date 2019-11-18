@@ -68,8 +68,8 @@
 <!--              </v-row>-->
               <v-row align="center">
                 <v-col cols="6" offset="3">
-                  <v-btn @click="saveUser" color="indigo darken-4" class="white--text mx-2">Add user</v-btn>
                   <v-btn @click="cancelAdding" color="blue-grey" class="white--text mx-2">Cancel</v-btn>
+                  <v-btn @click="saveUser" color="indigo darken-4" class="white--text mx-2">Add user</v-btn>
                 </v-col>
                 <v-col>
                 </v-col>
@@ -120,10 +120,10 @@ export default {
       // this.$v.$touch()
       // if (!this.$v.$dirty) {
       await db.firestore().collection('users').add({
-        first_name: this.firstName,
-        last_name: this.lastName,
+        firstName: this.firstName,
+        lastName: this.lastName,
         email: this.email,
-        phone_number: this.phoneNumber,
+        phoneNumber: this.phoneNumber,
         address: this.address
       })
       this.$emit('updateAddUserDialogVisibility', false)

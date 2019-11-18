@@ -7,7 +7,7 @@
     <v-toolbar-title>Application</v-toolbar-title>
     <v-spacer/>
     <div id="buttons">
-      <router-link to="/dashboard" class="v-btn icon pa-3">
+      <router-link to="/" class="v-btn icon pa-3">
         <v-icon style="font-size: 30px" class="">
           mdi-home
         </v-icon>

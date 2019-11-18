@@ -42,26 +42,24 @@
                     <v-col cols="10">
                       <v-card>
                         <v-row>
-                          <v-col cols="3" style="text-align: center">{{user.first_name}}</v-col>
-                          <v-col cols="3" style="text-align: center">{{user.last_name}}</v-col>
+                          <v-col cols="3" style="text-align: center">{{user.firstName}}</v-col>
+                          <v-col cols="3" style="text-align: center">{{user.lastName}}</v-col>
                           <v-col cols="6" style="text-align: center">{{user.email}}</v-col>
                         </v-row>
                       </v-card>
                     </v-col>
-                    <v-col cols="1">
+                    <v-col cols="2">
                       <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                          <v-btn fab small color="indigo lighten-1" v-on="on" @click="showUserDetails(user.id), detailsDialogVisibility = true">
+                          <v-btn class="mx-2" fab small color="indigo lighten-1" v-on="on" @click="showUserDetails(user.id), detailsDialogVisibility = true">
                             <v-icon style="color: white">mdi-account-card-details</v-icon>
                           </v-btn>
                         </template>
-                        <span>Karta użytkownika</span>
+                        <span>User details</span>
                       </v-tooltip>
-                    </v-col>
-                    <v-col cols="1">
                       <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                          <v-btn @click="deleteUser(user.id)" fab small color="red" v-on="on">
+                          <v-btn class="mx-2" @click="deleteUser(user.id)" fab small color="red" v-on="on">
                             <v-icon style="color: white">mdi-delete</v-icon>
                           </v-btn>
                         </template>
@@ -119,9 +117,9 @@ export default {
         if (user.id === id) {
           this.userDetails = {
             id: user.id,
-            firstName: user.first_name,
-            lastName: user.last_name,
-            phoneNumber: user.phone_number,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phoneNumber: user.phoneNumber,
             email: user.email,
             address: user.address
           }
