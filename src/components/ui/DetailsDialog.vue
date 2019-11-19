@@ -136,16 +136,13 @@
                       <v-card id="scroll" align="center" color="white" class="white--text font-weight-bold"
                               height="300px">
                         <div v-for="post in posts" :key="post.id" class="my-8">
-<!--                          <v-card width="300" height="30" class="my-2 pa-1 font-italic white&#45;&#45;text" color="amber accent-4">-->
-<!--                            {{post.title}}-->
-<!--                          </v-card>-->
                           <div>
-                          <v-card width="400" class="my-2 pa-2 font-italic white--text" color="amber accent-4">
-                            <v-card-text class="white--text font-weight-bold" style="font-size: 20px">{{post
-                              .title}}</v-card-text>
-                            {{post.body}}
-                          <v-card-text class="white--text" align="right">{{post.date}}</v-card-text>
-                          </v-card>
+                            <v-card width="400" class="my-2 pa-2 font-italic white--text" color="amber accent-4">
+                              <v-card-text class="white--text font-weight-bold" style="font-size: 20px">{{post
+                                .title}}</v-card-text>
+                              {{post.body}}
+                            <v-card-text class="white--text" align="right">{{post.date}}</v-card-text>
+                            </v-card>
                             <v-btn @click="deletePost(post.id)" color="amber accent-4" fab x-small>
                               <v-icon style="color: white">mdi-delete</v-icon>
                             </v-btn>
@@ -210,9 +207,7 @@ export default {
         }
       })
       this.posts.sort(function (a, b) {
-        // Turn your strings into dates, and then subtract them
-        // to get a value that is either negative, positive, or zero.
-        return new Date(b.date) - new Date(a.date)
+        return a.date > b.date
       })
       this.posts.reverse()
     },
