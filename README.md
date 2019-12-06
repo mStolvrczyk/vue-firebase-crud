@@ -1,5 +1,9 @@
 # vue-firebase-crud
 
+## General info
+Simple CRUD appication made with Vue.js and Firebase database.
+
+
 ## Project setup
 ```
 npm install
